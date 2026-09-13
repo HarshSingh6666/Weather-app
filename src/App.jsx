@@ -70,7 +70,6 @@ const validateConfiguration = () => {
 };
 
 export default function App() {
-  // Agar username aur step 2 pehle se saved hain, toh seedha step 2 se start ho
   const [step, setStep] = useState(() => {
     const savedStep = localStorage.getItem('aura_step');
     const savedName = localStorage.getItem('aura_username');
@@ -120,6 +119,24 @@ export default function App() {
   useEffect(() => {
     if (lastSearch) localStorage.setItem('aura_last_search', lastSearch);
   }, [lastSearch]);
+
+  const clearLocalStorage = () => {
+    localStorage.removeItem('aura_step');
+    localStorage.removeItem('aura_username');
+    localStorage.removeItem('aura_weather');
+    localStorage.removeItem('aura_last_search');
+  };
+
+  // Exit / Logout Handler
+  const handleLogout = useCallback(() => {
+    clearLocalStorage();
+    setUserName('');
+    setWeatherData(null);
+    setLastSearch('');
+    setCurrentLocation(null);
+    setStep(1);
+    clearMessages();
+  }, [clearMessages]);
 
   const fetchWeather = useCallback(async (query) => {
     if (missingConfiguration.length > 0) {
@@ -174,7 +191,7 @@ export default function App() {
 
       setWeatherData(formattedWeather);
       setLastSearch(query);
-      setStep(2); // Smoothly transition to dashboard
+      setStep(2);
       setSuccessMessage(`Weather updated for ${formattedWeather.name}.`);
     } catch (requestError) {
       console.error('Weather Fetch Error:', requestError);
@@ -200,7 +217,7 @@ export default function App() {
     setLocationLoading(false);
     setLoading(false);
     setError(getGeolocationErrorMessage(locationError));
-    setStep(2); // Fallback to dashboard so user can search manually
+    setStep(2);
   }, []);
 
   const handleStart = useCallback(() => {
@@ -212,7 +229,6 @@ export default function App() {
 
     clearMessages();
 
-    // Agar geolocation supported nahi hai toh seedha dashboard par bhejo manual search ke liye
     if (!navigator.geolocation) {
       setStep(2);
       return;
@@ -262,7 +278,6 @@ export default function App() {
     setError('Refresh karne ke liye koi location available nahi hai.');
   }, [clearMessages, currentLocation, fetchWeather, lastSearch]);
 
-  // Render Onboarding if step is 1 and name is not confirmed
   if (step === 1 || !userName) {
     return (
       <Onboarding
@@ -288,6 +303,7 @@ export default function App() {
       successMessage={successMessage}
       handleSearch={handleSearch}
       handleRefresh={handleRefresh}
+      handleLogout={handleLogout}
       formatTemperature={formatTemperature}
       formatWindSpeed={formatWindSpeed}
     />
