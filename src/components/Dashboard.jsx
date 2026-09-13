@@ -9,7 +9,8 @@ import {
   Navigation,
   CheckCircle,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  LogOut
 } from 'lucide-react';
 
 export default function Dashboard({
@@ -22,6 +23,7 @@ export default function Dashboard({
   successMessage,
   handleSearch,
   handleRefresh,
+  handleLogout,
   formatTemperature,
   formatWindSpeed
 }) {
@@ -30,20 +32,52 @@ export default function Dashboard({
       <div className="container" style={{ maxWidth: '800px', margin: '0 auto', padding: '24px 16px' }}>
         
         {/* Header Section */}
-        {/* Header Section */}
         <header className="header" style={{
           marginBottom: '32px',
           display: 'flex',
           flexDirection: 'column',
           gap: '16px'
         }}>
-          <div className="greeting-box">
-            <h1 className="greeting" style={{ fontSize: '28px', fontWeight: '700', color: '#ffffff', letterSpacing: '-0.5px', margin: 0 }}>
-              Namaste, {userName}! 👋
-            </h1>
-            <p className="sub-greeting" style={{ fontSize: '15px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
-              Here is your live weather overview
-            </p>
+          {/* Top Row: Greeting on Left, Exit Button on Right */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            width: '100%'
+          }}>
+            <div className="greeting-box">
+              <h1 className="greeting" style={{ fontSize: '28px', fontWeight: '700', color: '#ffffff', letterSpacing: '-0.5px', margin: 0 }}>
+                Namaste, {userName}! 👋
+              </h1>
+              <p className="sub-greeting" style={{ fontSize: '15px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
+                Here is your live weather overview
+              </p>
+            </div>
+
+            {/* Exit / Change Name Button fixed at Top-Right */}
+            <button
+              onClick={handleLogout}
+              title="Change Name / Exit"
+              style={{
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                borderRadius: '12px',
+                color: '#fca5a5',
+                padding: '8px 14px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '14px',
+                fontWeight: '600',
+                transition: 'background 0.2s ease',
+                flexShrink: 0,
+                marginTop: '2px'
+              }}
+            >
+              <LogOut size={16} />
+              <span>Exit</span>
+            </button>
           </div>
 
           {/* Clean Modern Search Form */}
@@ -290,7 +324,6 @@ export default function Dashboard({
   );
 }
 
-// Reusable inline style constants for clean stat cards
 const statCardStyle = {
   background: 'rgba(255, 255, 255, 0.05)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
